@@ -32,8 +32,8 @@ export default function Home() {
       isUrgent: false,
     };
 
-    todos.push(newTodo);
-    setTodos(todos);
+    // Create a new array instead of mutating the existing one
+    setTodos([...todos, newTodo]);
   };
 
   const deleteTodo = (id: number) => {
