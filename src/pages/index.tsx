@@ -32,12 +32,12 @@ export default function Home() {
       isUrgent: false,
     };
 
-    todos.push(newTodo);
-    setTodos(todos);
+    // Create a new array instead of mutating the existing one
+    setTodos([...todos, newTodo]);
   };
 
   const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id === id));
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   const toggleProperty = useCallback((id: number, property: keyof Pick<Todo, 'isCompleted' | 'isUrgent'>) => {
@@ -48,7 +48,7 @@ export default function Home() {
       return todo;
     });
     setTodos(updatedTodos);
-  }, [setTodos]);
+  }, [setTodos, todos]);
 
   const displayTodoList = (todoList:Todo[]) => {
     return (
@@ -62,13 +62,7 @@ export default function Home() {
   };
 
   const displayTodos = (displayUrgent: boolean) => {
-    return displayTodoList(todos.filter((x) => {
-      if (displayUrgent) {
-        return !x.isCompleted && x.isUrgent === displayUrgent;
-      } else {
-        return !x.isCompleted && x.isUrgent !== displayUrgent;
-      }
-    }));
+    return displayTodoList(todos.filter((x) => !x.isCompleted && x.isUrgent === displayUrgent));
   };
 
   const displayComplete = () => {
