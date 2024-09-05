@@ -1,4 +1,4 @@
-import React,  { useState, useEffect } from "react";
+import React,  { useState, useEffect, useRef } from "react";
 
 /*
  * Banner: pulls an image url from api.nasa.gov and displays the site banner
@@ -9,6 +9,10 @@ const Banner: React.FC = () => {
     const [currentImgUrl, setCurrentImgUrl] = useState<string | null>(null);
     const [copyright, setCopyright] = useState<string | null>(null);
 
+    // Refs to hold the latest image URLs
+    const imgUrlRef = useRef<string | null>(null);
+    const hdImgUrlRef = useRef<string | null>(null);
+
     useEffect(() => {
         const fetchImg = async () => {
             const res = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
@@ -18,13 +22,17 @@ const Banner: React.FC = () => {
             setHdImgUrl(data.hdurl);
             setCurrentImgUrl(window.innerWidth > 800 ? data.hdurl : data.url);
             setCopyright(data.copyright);
+
+            // update refs with the latest values
+            imgUrlRef.current = data.url;
+            hdImgUrlRef.current = data.hdurl;
         };
 
         fetchImg();
 
         const handleResize = () => {
             const bannerElement = document.querySelector('.banner');
-            bannerElement?.setAttribute('style', `background-image: url(${window.innerWidth > 800? hdImgUrl : imgUrl})`);
+            bannerElement?.setAttribute('style', `background-image: url(${window.innerWidth > 800? hdImgUrlRef.current : imgUrlRef.current})`);
         };
 
         window.addEventListener('resize', handleResize);
