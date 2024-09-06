@@ -47,7 +47,7 @@ export default function Home() {
       return todo;
     });
     setTodos(updatedTodos);
-  }, [setTodos]);
+  }, [todos, setTodos]);
 
   const displayTodoList = (todoList:Todo[]) => {
     return (
