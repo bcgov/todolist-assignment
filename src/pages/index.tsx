@@ -62,13 +62,7 @@ export default function Home() {
   };
 
   const displayTodos = (displayUrgent: boolean) => {
-    return displayTodoList(todos.filter((x) => {
-      if (displayUrgent) {
-        return !x.isCompleted && x.isUrgent === displayUrgent;
-      } else {
-        return !x.isCompleted && x.isUrgent !== displayUrgent;
-      }
-    }));
+    return displayTodoList(todos.filter((x) => !x.isCompleted && x.isUrgent === displayUrgent));
   };
 
   const displayComplete = () => {
