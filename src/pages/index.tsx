@@ -1,7 +1,7 @@
 import Head from "next/head";
 import React, { useCallback, useState } from "react";
 import { Todo } from "@/types/todo";
-import AddTodoForm from "@/components/AddTodoForm"
+import AddTodoForm from "@/components/AddTodoForm";
 import TodoList from "@/components/TodoList";
 import Banner from "@/components/Banner";
 import sampleData from "@/sampleData.json";
@@ -32,12 +32,11 @@ export default function Home() {
       isUrgent: false,
     };
 
-    todos.push(newTodo);
-    setTodos(todos);
+    setTodos([...todos, newTodo]);  // Spread operator to add new todo without mutating
   };
 
   const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id === id));
+    setTodos(todos.filter((todo) => todo.id !== id)); // Delete single todo item
   };
 
   const toggleProperty = useCallback((id: number, property: keyof Pick<Todo, 'isCompleted' | 'isUrgent'>) => {
@@ -48,28 +47,24 @@ export default function Home() {
       return todo;
     });
     setTodos(updatedTodos);
-  }, [setTodos]);
+  }, [todos, setTodos]);
 
   const displayTodoList = (todoList:Todo[]) => {
     return (
       <TodoList
         todos={todoList}
-        deleteTodo={deleteTodo} 
-        toggleComplete={(id) => toggleProperty(id, 'isCompleted')} 
-        toggleUrgent={(id) => toggleProperty(id, 'isUrgent')} 
+        deleteTodo={deleteTodo}
+        toggleComplete={(id) => toggleProperty(id, 'isCompleted')}
+        toggleUrgent={(id) => toggleProperty(id, 'isUrgent')}
       />
     );
   };
 
   const displayTodos = (displayUrgent: boolean) => {
-    return displayTodoList(todos.filter((x) => {
-      if (displayUrgent) {
-        return !x.isCompleted && x.isUrgent === displayUrgent;
-      } else {
-        return !x.isCompleted && x.isUrgent !== displayUrgent;
-      }
-    }));
-  };
+    return displayTodoList(
+        todos.filter((x) => !x.isCompleted && x.isUrgent === displayUrgent)
+    );
+};
 
   const displayComplete = () => {
     return displayTodoList(todos.filter((x) => x.isCompleted));
