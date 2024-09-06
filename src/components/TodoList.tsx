@@ -17,6 +17,7 @@ function TodoList({ todos, deleteTodo, toggleComplete, toggleUrgent }: TodoListP
         <ul>
             {todos.map((todo) => (
                 <TodoItem
+                    key={todo.id}
                     todo={todo}
                     deleteTodo={deleteTodo}
                     toggleComplete={toggleComplete}
