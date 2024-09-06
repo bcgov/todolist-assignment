@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
+import {ToastContainer, Bounce, toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface AddTodoFormProps {
     addTodo: (title: string, desc: string) => void;
@@ -8,7 +10,7 @@ interface AddTodoFormProps {
  * AddTodoForm: Create two input fields for title, and description string fields
  * As well as a submit button which creates the new To Do via addTodo 
  */
-function AddTodoForm({ addTodo }: AddTodoFormProps) {
+function AddTodoForm({addTodo}: AddTodoFormProps) {
     const [title, setTitle] = useState<string>('');
     const [desc, setDesc] = useState<string>('');
 
@@ -17,6 +19,18 @@ function AddTodoForm({ addTodo }: AddTodoFormProps) {
         addTodo(title, desc);
         setTitle('');
         setDesc('');
+        var toasterMesage = "Added TODO with title [" + title + "]";
+        toast(toasterMesage, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+        });
     };
 
     return (
@@ -41,6 +55,7 @@ function AddTodoForm({ addTodo }: AddTodoFormProps) {
                 />
             </div>
             <button type="submit">Add To Do</button>
+            <ToastContainer/>
         </form>
     );
 }
