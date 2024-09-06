@@ -11,29 +11,44 @@ const Banner: React.FC = () => {
 
     useEffect(() => {
         const fetchImg = async () => {
-            const res = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
-            const data = await res.json();
-
-            setImgUrl(data.url);
-            setHdImgUrl(data.hdurl);
-            setCurrentImgUrl(window.innerWidth > 800 ? data.hdurl : data.url);
-            setCopyright(data.copyright);
+            // Error handling
+            try {
+                const res = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch image');
+                }
+                const data = await res.json();
+                setImgUrl(data.url);
+                setHdImgUrl(data.hdurl);
+                setCurrentImgUrl(window.innerWidth > 800? data.hdurl : data.url);
+                setCopyright(data.copyright);
+            } catch (error) {
+                console.error("Error fetching the banner image:", error);
+                setCurrentImgUrl(null);
+            }
         };
 
-        fetchImg();
+    fetchImg();
+}, []);
 
+
+    useEffect(() => {
         const handleResize = () => {
             const bannerElement = document.querySelector('.banner');
-            bannerElement?.setAttribute('style', `background-image: url(${window.innerWidth > 800? hdImgUrl : imgUrl})`);
+            bannerElement?.setAttribute('style', `background-image: url(${window.innerWidth > 800 ? hdImgUrl : imgUrl})`);
         };
 
         window.addEventListener('resize', handleResize);
 
+        // Call handleResize once to set the image on first render
         handleResize();
-    }, []);
 
-    if (!currentImgUrl)
+        return () => window.removeEventListener('resize', handleResize);  // Clean up event listener on unmount
+    }, [hdImgUrl, imgUrl]);  // Depend on hdImgUrl and imgUrl
+
+    if (!currentImgUrl) {
         return <p>Banner Loading...</p>;
+    }
 
     return (
         <div className="banner" style={{ backgroundImage: `url(${currentImgUrl})` }}>

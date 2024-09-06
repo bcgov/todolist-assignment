@@ -13,6 +13,7 @@ function AddTodoForm({ addTodo }: AddTodoFormProps) {
     const [desc, setDesc] = useState<string>('');
 
     const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault(); // prevent the default form submission
         addTodo(title, desc);
         setTitle('');
         setDesc('');
@@ -27,6 +28,7 @@ function AddTodoForm({ addTodo }: AddTodoFormProps) {
                     placeholder="Provide a title for the new To Do"
                     onChange={(e) => setTitle(e.target.value)}
                     required
+                    aria-label="To Do Title"
                 />
             </div>
             <div>
@@ -36,6 +38,7 @@ function AddTodoForm({ addTodo }: AddTodoFormProps) {
                     placeholder="Briefly describe the To Do task"
                     onChange={(e) => setDesc(e.target.value)}
                     required
+                    aria-label="To Do Description"
                 />
             </div>
             <button type="submit">Add To Do</button>
