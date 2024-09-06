@@ -23,14 +23,15 @@ const Banner: React.FC = () => {
         fetchImg();
 
         const handleResize = () => {
-            const bannerElement = document.querySelector('.banner');
-            bannerElement?.setAttribute('style', `background-image: url(${window.innerWidth > 800? hdImgUrl : imgUrl})`);
+            if (hdImgUrl && imgUrl) {
+                setCurrentImgUrl(window.innerWidth > 800 ? hdImgUrl : imgUrl);
+            }
         };
 
         window.addEventListener('resize', handleResize);
 
         handleResize();
-    }, []);
+    }, [hdImgUrl, imgUrl]); // Dependencies effect when these change
 
     if (!currentImgUrl)
         return <p>Banner Loading...</p>;
